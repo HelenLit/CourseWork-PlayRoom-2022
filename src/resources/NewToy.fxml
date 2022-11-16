@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="NewToyController">
+   <children>
+      <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" />
+      <Button layoutX="273.0" layoutY="324.0" mnemonicParsing="false" onAction="#addNewToy" text="Submit" />
+      <ChoiceBox fx:id="sizeBox" layoutX="135.0" layoutY="255.0" prefWidth="150.0" />
+      <ChoiceBox fx:id="ageGroup" layoutX="135.0" layoutY="188.0" prefWidth="150.0" />
+      <Label layoutX="135.0" layoutY="160.0" text="Виберіть вікову групу:" />
+      <Label layoutX="135.0" layoutY="223.0" text="Виберіть розмір:" />
+      <Label layoutX="136.0" layoutY="36.0" text="Впишіть назву іграшки:" />
+      <Label layoutX="136.0" layoutY="98.0" text="Впишіть ціну іграшки:" />
+      <TextField fx:id="toyNameField" layoutX="136.0" layoutY="64.0" />
+      <TextField fx:id="priceField" layoutX="136.0" layoutY="127.0" />
+   </children>
+</AnchorPane>
