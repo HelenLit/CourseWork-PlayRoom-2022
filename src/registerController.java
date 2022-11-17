@@ -1,6 +1,7 @@
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.example.Main;
 
@@ -8,8 +9,18 @@ import Child.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class registerController implements Initializable {
+    @FXML
+    private Label firstNameLabel;
+    @FXML
+    private Label lastNameLabel;
+    @FXML
+    private Label ageGroupLabel;
+    @FXML
+    private Label parentsCredentialsLabel;
     @FXML
     private ChoiceBox<String> ageGroup;
     @FXML
@@ -34,20 +45,35 @@ public class registerController implements Initializable {
         ageGroup.setOnAction(this::getAgeGroup);
     }
 
+    public boolean checkNumber(String number){
+
+        Pattern p = Pattern.compile(
+                "^(\\+?\\d{1,4})?((\\(\\d{1,4}\\))|\\d{1,4})[-.]?\\d{1,4}[-.]?\\d{1,4}[-.]?\\d{1,4}$");
+
+        Matcher m = p.matcher(number);
+
+        boolean res = m.matches();
+
+        return (res);
+    }
+
+    public void returnToMain(javafx.event.ActionEvent e) throws IOException {
+        new Controller().changeScene("/resources/Main.fxml",e);
+    }
+
     public void registerChild(javafx.event.ActionEvent e) throws IOException {
-        System.out.println("Р РµС”СЃС‚СЂР°С†С–СЏ РЅРѕРІРѕС— РґРёС‚РёРЅРё\nР’РІРµРґС–С‚СЊ\n\tС–Рј'СЏ,\n\tРїСЂС–Р·РІРёС‰Рµ,\n\tРІС–РєРѕРІСѓ РіСЂСѓРїСѓ(1-TODDLER, 2-MIDDLECHILD, 3-TEENAGER),\n\tРєРѕРЅС‚Р°РєС‚ РґРѕ Р±Р°С‚СЊРєС–РІ");
         String firstName = firstNameField.getText();
         if(firstName.equals(""))
-            firstName = "Р‘РѕРіРґР°РЅ";
+            firstNameLabel.setText("Неправильно введене ім'я");
 
         String lastName = lastNameField.getText();
         if(lastName.equals(""))
-            lastName = "РџРѕРЅРѕРјР°СЂРµРЅРєРѕ";
+            lastNameLabel.setText("Неправильно введене прізвище");
 
         int id = 0;
 
         if(type.equals("")){
-            id = 1;
+            ageGroupLabel.setText("Не вибрано вікової групи");
         }else{
             for(int i = 0; i < types.length;i++){
                 if(types[i].equals(type)){
@@ -57,10 +83,18 @@ public class registerController implements Initializable {
             }
         }
 
-        String credentials = parentsCredentialsField.getText();
-        if(credentials.equals("") )
-            credentials = "+48072612399";
 
+        String credentials = parentsCredentialsField.getText();
+        if(credentials.equals("") || !checkNumber(credentials))
+            parentsCredentialsLabel.setText("Неправильно введені контакти батьків");
+
+        if(firstName.equals("") || lastName.equals("") || type.equals("") || credentials.equals("") || !checkNumber(credentials)){
+            return;
+        }
+        firstNameLabel.setText("Введіть ім'я:");
+        lastNameLabel.setText("Введіть прізвище:");
+        ageGroupLabel.setText("Виберіть вікову групу:");
+        parentsCredentialsLabel.setText("Введіть контакт до батьків:");
         firstNameField.clear();
         lastNameField.clear();
         parentsCredentialsField.clear();

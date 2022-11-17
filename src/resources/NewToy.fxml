@@ -13,11 +13,12 @@
       <Button layoutX="273.0" layoutY="324.0" mnemonicParsing="false" onAction="#addNewToy" text="Submit" />
       <ChoiceBox fx:id="sizeBox" layoutX="135.0" layoutY="255.0" prefWidth="150.0" />
       <ChoiceBox fx:id="ageGroup" layoutX="135.0" layoutY="188.0" prefWidth="150.0" />
-      <Label layoutX="135.0" layoutY="160.0" text="Виберіть вікову групу:" />
-      <Label layoutX="135.0" layoutY="223.0" text="Виберіть розмір:" />
-      <Label layoutX="136.0" layoutY="36.0" text="Впишіть назву іграшки:" />
-      <Label layoutX="136.0" layoutY="98.0" text="Впишіть ціну іграшки:" />
+      <Label fx:id="ageGroupLabel" layoutX="135.0" layoutY="160.0" text="Виберіть вікову групу:" />
+      <Label fx:id="sizeLabel" layoutX="135.0" layoutY="223.0" text="Виберіть розмір:" />
+      <Label fx:id="nameLabel" layoutX="136.0" layoutY="36.0" text="Впишіть назву іграшки:" />
+      <Label fx:id="priceLabel" layoutX="136.0" layoutY="98.0" text="Впишіть ціну іграшки:" />
       <TextField fx:id="toyNameField" layoutX="136.0" layoutY="64.0" />
       <TextField fx:id="priceField" layoutX="136.0" layoutY="127.0" />
+      <Button layoutX="355.0" layoutY="156.0" mnemonicParsing="false" onAction="#returnToMain" text="Повернутися до головного меню" />
    </children>
 </AnchorPane>

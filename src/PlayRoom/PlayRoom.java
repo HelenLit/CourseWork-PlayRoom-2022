@@ -2,6 +2,8 @@ package PlayRoom;
 
 import Child.*;
 import Toy.*;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,12 +47,12 @@ public class PlayRoom {
     public boolean registerChild(Child child){
         check();
         Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-        logger.info("Реєстрація дитини");
+        logger.info("Р РµС”СЃС‚СЂР°С†С–СЏ РґРёС‚РёРЅРё");
         if(childrenInRoom.size() < MAXCAPACITY){
-            logger.fine("Реєстрація успішна, так як дітей у кімнаті менше за " + MAXCAPACITY);
+            logger.fine("Р РµС”СЃС‚СЂР°С†С–СЏ СѓСЃРїС–С€РЅР°, С‚Р°Рє СЏРє РґС–С‚РµР№ Сѓ РєС–РјРЅР°С‚С– РјРµРЅС€Рµ Р·Р° " + MAXCAPACITY);
             return childrenInRoom.add(child);
         }else {
-            logger.severe("Реєстрація не пройшла, так як дітей у кімнаті вже більше за " + MAXCAPACITY);
+            logger.severe("Р РµС”СЃС‚СЂР°С†С–СЏ РЅРµ РїСЂРѕР№С€Р»Р°, С‚Р°Рє СЏРє РґС–С‚РµР№ Сѓ РєС–РјРЅР°С‚С– РІР¶Рµ Р±С–Р»СЊС€Рµ Р·Р° " + MAXCAPACITY);
             return false;
         }
     }
@@ -63,7 +65,7 @@ public class PlayRoom {
             }
         }catch (SQLException e){
             Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-            logger.severe("Помилка виконання запиту з таблицею зареєстрованих дітей");
+            logger.severe("РџРѕРјРёР»РєР° РІРёРєРѕРЅР°РЅРЅСЏ Р·Р°РїРёС‚Сѓ Р· С‚Р°Р±Р»РёС†РµСЋ Р·Р°СЂРµС”СЃС‚СЂРѕРІР°РЅРёС… РґС–С‚РµР№");
             System.err.println(Arrays.toString(e.getStackTrace()));
             System.exit(e.getErrorCode());
         }
@@ -71,7 +73,7 @@ public class PlayRoom {
     }
     public List<Child> ChildrenList() {
         Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-        logger.info("Виведення списку зареєстрованих дітей");
+        logger.info("Р’РёРІРµРґРµРЅРЅСЏ СЃРїРёСЃРєСѓ Р·Р°СЂРµС”СЃС‚СЂРѕРІР°РЅРёС… РґС–С‚РµР№");
         return execChildListQuery("""
                 USE [Course_Work_Play_Room]
                 SELECT *
@@ -83,7 +85,7 @@ public class PlayRoom {
             st.executeUpdate(query);
         }catch (SQLException e){
             Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-            logger.severe("Помилка виконання запиту з таблицею зареєстрованих дітей");
+            logger.severe("РџРѕРјРёР»РєР° РІРёРєРѕРЅР°РЅРЅСЏ Р·Р°РїРёС‚Сѓ Р· С‚Р°Р±Р»РёС†РµСЋ Р·Р°СЂРµС”СЃС‚СЂРѕРІР°РЅРёС… РґС–С‚РµР№");
             System.err.println(Arrays.toString(e.getStackTrace()));
             e.printStackTrace();
         }
@@ -95,7 +97,7 @@ public class PlayRoom {
     }
     private void addChildren(){
         Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-        logger.info("Додавання в БД зареєстрованих дітей");
+        logger.info("Р”РѕРґР°РІР°РЅРЅСЏ РІ Р‘Р” Р·Р°СЂРµС”СЃС‚СЂРѕРІР°РЅРёС… РґС–С‚РµР№");
         StringBuilder query = new StringBuilder("INSERT INTO [Client].[Registered_Children]" +
                 "([fname],[lname],[ageGroupID],[parent_contact]) VALUES");
         childrenInRoom.forEach(ch -> query.append("('" + ch.getFname() + "','" + ch.getLname() + "'," + ch.getAgeGroup().getOrd() + ",'" + ch.getContact()+"'),"));
@@ -104,13 +106,13 @@ public class PlayRoom {
             Statement st = connection.createStatement();
             st.execute(query.toString());
         }catch (SQLException e){
-            logger.severe("Не вдалось додати в БД зареєстрованих дітей");
+            logger.severe("РќРµ РІРґР°Р»РѕСЃСЊ РґРѕРґР°С‚Рё РІ Р‘Р” Р·Р°СЂРµС”СЃС‚СЂРѕРІР°РЅРёС… РґС–С‚РµР№");
             e.printStackTrace();
         }
     }
     private int autoPrepRoom(){
         Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-        logger.info("Автоматичний підбір вікових груп");
+        logger.info("РђРІС‚РѕРјР°С‚РёС‡РЅРёР№ РїС–РґР±С–СЂ РІС–РєРѕРІРёС… РіСЂСѓРї");
         List<AgeGroup> ageGroupList = new ArrayList<>();
         for (Child ch: childrenInRoom) {
             if(!ageGroupList.contains(ch.getAgeGroup()))
@@ -121,14 +123,13 @@ public class PlayRoom {
     }
     public void startGroup() {
         Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-        logger.config("Спроба відкриття кімнати");
-        if(toyList.toyEntityMap.size()==0){
-            logger.severe("Не вдалося відкрити кімнату, тому що спершу має бути створений список іграшок");
-            System.err.println("Перед вікриттям кімнати, має бути створений список іграшок");
-            return;
+        logger.config("РЎРїСЂРѕР±Р° РІС–РґРєСЂРёС‚С‚СЏ РєС–РјРЅР°С‚Рё");
+        if(toyList.toyEntityMap == null || toyList.toyEntityMap.size()==0){
+            logger.severe("РќРµ РІРґР°Р»РѕСЃСЏ РІС–РґРєСЂРёС‚Рё РєС–РјРЅР°С‚Сѓ, С‚РѕРјСѓ С‰Рѕ СЃРїРµСЂС€Сѓ РјР°С” Р±СѓС‚Рё СЃС‚РІРѕСЂРµРЅРёР№ СЃРїРёСЃРѕРє С–РіСЂР°С€РѕРє");
+            throw new NullPointerException();
         }
         if(isPlaying) return;
-        logger.fine("Кімнату успішно відкрито, заповнюються місця для зареєстрованих дітей");
+        logger.fine("РљС–РјРЅР°С‚Сѓ СѓСЃРїС–С€РЅРѕ РІС–РґРєСЂРёС‚Рѕ, Р·Р°РїРѕРІРЅСЋСЋС‚СЊСЃСЏ РјС–СЃС†СЏ РґР»СЏ Р·Р°СЂРµС”СЃС‚СЂРѕРІР°РЅРёС… РґС–С‚РµР№");
         isPlaying = true;
         toyList.createToyList();
         addChildren();
@@ -136,11 +137,11 @@ public class PlayRoom {
     }
     public void freeRoom(){
         Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-        logger.config("Звільнення кімнати");
+        logger.config("Р—РІС–Р»СЊРЅРµРЅРЅСЏ РєС–РјРЅР°С‚Рё");
         toyList.trunkToyList();
         toyList.freeList();
         FreeChildrenList();
-        System.out.println("Кімнату звільнено");
+        System.out.println("РљС–РјРЅР°С‚Сѓ Р·РІС–Р»СЊРЅРµРЅРѕ");
     }
     public ToyList getToyList() {
            return toyList;
@@ -173,10 +174,10 @@ public class PlayRoom {
 
         public int getActualMoney(){
             Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-            logger.info("Виведення фактичної ціни усіх іграшок");
+            logger.info("Р’РёРІРµРґРµРЅРЅСЏ С„Р°РєС‚РёС‡РЅРѕС— С†С–РЅРё СѓСЃС–С… С–РіСЂР°С€РѕРє");
             int result = 0;
             if(toyEntityMap == null || toyEntityMap.size() == 0){
-                logger.severe("Спершу потрібно створити список іграшок!");
+                logger.severe("РЎРїРµСЂС€Сѓ РїРѕС‚СЂС–Р±РЅРѕ СЃС‚РІРѕСЂРёС‚Рё СЃРїРёСЃРѕРє С–РіСЂР°С€РѕРє!");
                 return 0;
             }
             for (ToyEntityInfo tei: toyEntityMap.values()) {
@@ -189,11 +190,10 @@ public class PlayRoom {
         @Override
         public final Map<Integer, ToyEntityInfo> CreateToyMap(List<Toy>... ageGroupToys) {
             Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-            logger.info("Спроба підібрати список іграшок");
+            logger.info("РЎРїСЂРѕР±Р° РїС–РґС–Р±СЂР°С‚Рё СЃРїРёСЃРѕРє С–РіСЂР°С€РѕРє");
             check();
             if(autoPrepRoom() == 0){
-                System.err.println("Перед вікриттям кімнати, має зареєструватись хоча б 1 дитина");
-                logger.severe("Спроба невдала, тому що перед вікриттям кімнати, має зареєструватись хоча б 1 дитина");
+                logger.severe("РЎРїСЂРѕР±Р° РЅРµРІРґР°Р»Р°, С‚РѕРјСѓ С‰Рѕ РїРµСЂРµРґ РІС–РєСЂРёС‚С‚СЏРј РєС–РјРЅР°С‚Рё, РјР°С” Р·Р°СЂРµС”СЃС‚СЂСѓРІР°С‚РёСЃСЊ С…РѕС‡Р° Р± 1 РґРёС‚РёРЅР°");
                 return null;
             }
             toyEntityMap = new HashMap<>();
@@ -227,7 +227,7 @@ public class PlayRoom {
                     }
                 }
             }while (added>0 && money>0);
-            logger.info("Список успішно підібрано");
+            logger.info("РЎРїРёСЃРѕРє СѓСЃРїС–С€РЅРѕ РїС–РґС–Р±СЂР°РЅРѕ");
             return toyEntityMap;
         }
     }

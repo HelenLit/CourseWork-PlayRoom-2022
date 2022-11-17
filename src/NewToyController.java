@@ -4,6 +4,7 @@ import Toy.ToySize;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.example.Main;
 
@@ -12,7 +13,14 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class NewToyController implements Initializable{
-
+    @FXML
+    private Label nameLabel;
+    @FXML
+    private Label priceLabel;
+    @FXML
+    private Label ageGroupLabel;
+    @FXML
+    private Label sizeLabel;
     @FXML
     private TextField toyNameField;
     @FXML
@@ -48,24 +56,28 @@ public class NewToyController implements Initializable{
         size = sizeBox.getValue();
     }
 
+    public void returnToMain(javafx.event.ActionEvent e) throws IOException {
+        new Controller().changeScene("/resources/Main.fxml",e);
+    }
+
     public void addNewToy(javafx.event.ActionEvent e) throws IOException {
         System.out.println("Додавання нової іграшки у базу даних\nВведіть\n\tназву,\n\tціну,\n\tвікову групу(1-TODDLER, 2-MIDDLECHILD, 3-TEENAGER)\n\tта розмір (1-TINY, 2-SMALL, 3 -> MEDIUM, 4 -> BIG)");
         String name = toyNameField.getText();
         if(name.equals(""))
-            name = "Teddy Bear";
+            nameLabel.setText("Неправильно введене ім'я");
 
         int price = 0;
 
         try{
             price = Integer.parseInt(priceField.getText());
         }catch (NumberFormatException number){
-            price = 350;
+            priceLabel.setText("Неправильно введено ціну");
         }
 
         int id = 0;
 
         if(type.equals("")){
-            id = 1;
+            ageGroupLabel.setText("Не вибрано вікової групи");
         }else{
             for(int i = 0; i < types.length;i++){
                 if(types[i].equals(type)){
@@ -78,7 +90,7 @@ public class NewToyController implements Initializable{
         int toySize = 0;
 
         if(size.equals("")){
-            toySize = 1;
+            ageGroupLabel.setText("Не вибрано розмір");
         }else{
             for(int i = 0; i < sizes.length;i++){
                 if(sizes[i].equals(size)){
@@ -89,6 +101,13 @@ public class NewToyController implements Initializable{
         }
         toyNameField.clear();
         priceField.clear();
+        if(name.equals("") || price == 0 || type.equals("") || size.equals("") ){
+            return;
+        }
+        ageGroupLabel.setText("Виберіть вікову групу:");
+        sizeLabel.setText("Виберіть розмір:");
+        nameLabel.setText("Впишіть назву іграшки:");
+        priceLabel.setText("Впишіть ціну іграшки:");
         AgeGroup age = AgeGroup.getAgeGroupByOrd(id);
         ToySize size = ToySize.getSizeByOrd(toySize);
         Main.adm.getToyList().addToy(Toy.createToy(0,name,price,age,size));

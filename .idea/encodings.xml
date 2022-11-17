@@ -8,7 +8,8 @@
     <file url="file://$PROJECT_DIR$/src/DAO/SQLServerDAOFactory.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/Email/EmailSender.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/PlayRoom/AbstractToyList.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/src/PlayRoom/PlayRoom.java" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/PlayRoom/PlayRoom.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/org/example/Main.java" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/registerController.java" charset="windows-1251" />
   </component>
 </project>

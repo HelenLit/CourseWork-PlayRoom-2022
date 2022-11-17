@@ -16,6 +16,7 @@ import org.example.Main;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class Controller{
 
@@ -23,6 +24,7 @@ public class Controller{
     private TextField deleteField;
     @FXML
     private TextField priceField;
+
     @FXML
     private Label actualPrice;
     @FXML
@@ -58,8 +60,8 @@ public class Controller{
         stage.show();
     }
     public void updateList(List<Toy> toy){
-        listOfToys.getItems().addAll(new Toy(1,"1",1,AgeGroup.getAgeGroupByOrd(1),ToySize.BIG).toString());
         for (Toy value : toy) {
+            System.out.println(value);
             listOfToys.getItems().addAll(value.toString());
         }
     }
@@ -96,15 +98,11 @@ public class Controller{
         int ID;
         try {
             ID = Integer.parseInt(deleteField.getText());
-            if(ID > Main.adm.getToyList().getInitialMoney()) {  //Size method
-                deleteLabel.setText("Ви ввели неправильні дані, введіть їх ще раз");
-                return;
-            }
-        }catch(NumberFormatException number){
+            Main.adm.getToyList().deleteToy(ID);
+        } catch (RuntimeException number) {
             deleteLabel.setText("Ви ввели неправильні дані, введіть їх ще раз");
             return;
         }
-        Main.adm.getToyList().deleteToy(ID);
         deleteField.clear();
         deleteLabel.setText("Введіть ID іграшки, яку хочете видалити :");
         changeScene("/resources/Main.fxml",e);
@@ -143,7 +141,9 @@ public class Controller{
         updatePrice();
     }
 
-    public void createList(javafx.event.ActionEvent e){
+    public void createList(javafx.event.ActionEvent e) throws IOException {
+        try{
+        listOfToys.getItems().clear();
         Main.adm.getPlayRoom().getToyList().CreateToyMap(Main.adm.getToyList().allToysByAgeGroup(AgeGroup.TODDLER)
                 , Main.adm.getToyList().allToysByAgeGroup(AgeGroup.MIDDLECHILD)
                 , Main.adm.getToyList().allToysByAgeGroup(AgeGroup.TEENAGER));
@@ -154,18 +154,43 @@ public class Controller{
         for(Toy t : Main.adm.getPlayRoom().getToyList().listFromMap(list)){
             listOfToys.getItems().addAll(t.toString());
         }
-
         updatePrice();
+        }
+        catch (NullPointerException exception){
+            Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+            logger.severe("Could not create list because no initial price");
+            changeScene("/resources/roomError.fxml",e);
+        }
     }
 
-    public void startRoom(javafx.event.ActionEvent e){
-        Main.adm.getPlayRoom().startGroup();
-        EmailSender.send("Playroom event","Playroom is opened");
+    public void startRoom(javafx.event.ActionEvent e) throws IOException {
+        try{
+            Main.adm.getPlayRoom().startGroup();
+            changeScene("/resources/roomStart.fxml",e);
+            EmailSender.send("Playroom event","Playroom is opened");
+        }
+        catch (NullPointerException exception){
+            Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+            logger.severe("Could not open room because list of toys is not created");
+            changeScene("/resources/roomError.fxml",e);
+        }
     }
 
-    public void endRoom(javafx.event.ActionEvent e){
+    public void endRoom(javafx.event.ActionEvent e) throws IOException {
+        try{
         Main.adm.getPlayRoom().freeRoom();
+        changeScene("/resources/roomEnd.fxml",e);
         EmailSender.send("Playroom event","Playroom is closed");
+        }
+        catch (NullPointerException exception){
+            Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+            logger.severe("Could not close room because list of toys is not created");
+            changeScene("/resources/roomError.fxml",e);
+        }
+    }
+
+    public void okButton(javafx.event.ActionEvent e) throws IOException {
+        changeScene("/resources/Main.fxml",e);
     }
 
     public void childrenList(javafx.event.ActionEvent e){
@@ -205,21 +230,18 @@ public class Controller{
         listOfToys.getItems().clear();
         updateList(Main.adm.getPlayRoom().getToyList().sortToysByAgeGroup());
         updatePrice();
-        returnToMain(sortAnchor);
     }
 
     public void sortByAmount(javafx.event.ActionEvent e) throws IOException {
         listOfToys.getItems().clear();
         updateList(Main.adm.getPlayRoom().getToyList().sortToysByAmount());
         updatePrice();
-        returnToMain(sortAnchor);
     }
 
     public void sortByPrice(javafx.event.ActionEvent e) throws IOException {
         listOfToys.getItems().clear();
         updateList(Main.adm.getPlayRoom().getToyList().sortToysByPrice());
         updatePrice();
-        returnToMain(sortAnchor);
     }
 
     public void sortReturn(javafx.event.ActionEvent e) throws IOException {
@@ -232,17 +254,22 @@ public class Controller{
         updateList(Main.adm.getToyList().allToysByAgeGroup(AgeGroup.MIDDLECHILD));
         updateList(Main.adm.getToyList().allToysByAgeGroup(AgeGroup.TEENAGER));
         updatePrice();
-        returnToMain(tViewAnchor);
     }
 
     public void toysInRoom(javafx.event.ActionEvent e) throws IOException {
         listOfToys.getItems().clear();
         updateList(Main.adm.getPlayRoom().getToyList().toysInRoom());
         updatePrice();
-        returnToMain(tViewAnchor);
     }
 
     public void tviewReturn(javafx.event.ActionEvent e) throws IOException{
         returnToMain(tViewAnchor);
+    }
+
+    public void flushList(javafx.event.ActionEvent e ){
+        listOfToys.getItems().clear();
+    }
+    public void priceReturn(javafx.event.ActionEvent e) throws IOException{
+        returnToMain(priceAnchor);
     }
 }

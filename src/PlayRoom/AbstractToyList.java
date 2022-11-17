@@ -85,11 +85,12 @@ public abstract class AbstractToyList {
     }
     private void execVoidToyQuery(String query){
         try(Statement st = getConnection().createStatement()){
-            st.executeUpdate(query);
+            if (st.executeUpdate(query) == 0){
+                throw new RuntimeException();
+            }
         }catch (SQLException e){
             Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
             logger.severe("Помилка виконання SQL-запиту");
-            e.printStackTrace();
         }
     }
     public void createToyList(){
